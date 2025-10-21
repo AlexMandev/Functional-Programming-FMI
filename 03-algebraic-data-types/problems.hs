@@ -21,6 +21,7 @@ fibsHelper a b = a : (fibsHelper b (a + b))
 
 -- Да се дефинира функция, която сравнява два елемента от целочислен тип и връща стойност от горния АТД.
 data Ordering = LessThan | Equal | GreaterThan
+    deriving Show
 cmpInt :: Int -> Int -> Ordering
 cmpInt x y
   | x < y = LessThan
@@ -81,4 +82,11 @@ pairToTuple (Pair a b) = (a, b)
 tupleToPair :: (a, b) -> Pair a b
 tupleToPair (a, b) = Pair a b
 
-cmpPair :: (Ord a, Ord b) => Pair a b -> Ordering
+cmpPair :: Pair Int Int -> Ordering
+cmpPair (Pair x y) = cmpInt x y
+
+pairsToList :: [Pair a b] -> Pair [a] [b]
+pairsToList [] = Pair [] []
+pairsToList ((Pair a b) : xs) =  Pair (a : as) (b : bs)
+    where
+        Pair as bs = pairsToList xs
