@@ -1,4 +1,4 @@
-import Prelude hiding (repeat, Ordering)
+import Prelude hiding (repeat, Ordering, Nothing, Just, Maybe)
 
 -- 1. Да се дефинира функция, която приема елемент от произволен тип и връща безкраен списък, съдържащ този елемент:
 repeat :: a -> [a]
@@ -90,3 +90,104 @@ pairsToList [] = Pair [] []
 pairsToList ((Pair a b) : xs) =  Pair (a : as) (b : bs)
     where
         Pair as bs = pairsToList xs
+
+-- 7. Да се дефинира алгебричен тип данни Maybe, аналогичен на този, за който сте говорили на лекции. Да се дефинират следните функции:
+-- safeDiv :: Double -> Double -> Maybe Double;
+-- addM :: Maybe Int -> Maybe Int -> Maybe Int;
+-- sumM :: [Maybe Int] -> Maybe Int;
+-- isJust :: Maybe a -> Bool;
+-- isNothing :: Maybe a -> Bool;
+-- fromJust :: Maybe a -> a.
+
+data Maybe a = Nothing | Just a
+    deriving Show
+
+safeDiv :: Double -> Double -> Maybe Double
+safeDiv _ 0 = Nothing
+safeDiv a b = Just (a / b)
+
+addM :: Maybe Int -> Maybe Int -> Maybe Int
+addM (Just a) (Just b) = Just (a + b)
+addM _ _ = Nothing
+
+sumM :: [Maybe Int] -> Maybe Int
+sumM [] = Just 0
+sumM (Nothing:_) = Nothing
+sumM (Just x:xs) = addM (Just x) (sumM xs)
+
+isJust :: Maybe a -> Bool
+isJust (Just _) = True
+isJust _ = False
+
+isNothing :: Maybe a -> Bool
+isNothing Nothing = True
+isNothing _ = False
+
+fromJust :: Maybe a -> a
+fromJust (Just x) = x
+fromJust Nothing = error "This isn't anything"
+
+-- 8. Да се дефинира алгебричен тип данни, представящ множество от елементи от произволен тип. Да се дефинират следните функции:
+
+--     fromList :: [a] -> Set a;
+--     toList :: Set a -> [a];
+--     insert :: a -> Set a -> Set a;
+--     delete :: a -> Set a -> Set a;
+--     elemS :: a -> Set a -> Bool;
+--     union :: Set a -> Set a -> Set a;
+--     intersect :: Set a -> Set a -> Set a;
+--     equal :: Set a -> Set a -> Bool.
+
+-- Забележка: Някои от типовете на горните функции са непълни. Допълнете ги по такъв начин, че да се компилират и работят коректно.
+
+data Set a = Set [a]
+    deriving Show
+
+fromList :: Eq a => [a] -> Set a
+fromList xs = Set (removeDuplicates xs)
+  where
+    removeDuplicates [] = []
+    removeDuplicates (y:ys) = 
+      if y `elem` ys 
+        then removeDuplicates ys
+        else y : removeDuplicates ys
+
+toList :: Set a -> [a]
+toList (Set l) = l
+
+insert :: (Eq) => a -> Set a -> a
+insert x (Set s) =
+    if x `elem`
+        then Set s
+        else Set (x : xs)
+
+delete :: (Eq a) => a -> Set a -> Set a
+delete x (Set xs) = Set (delete' x xs)
+  where
+    delete' :: (Eq a) => a -> [a] -> [a]
+    delete' _ [] = []
+    delete' x (y : ys)
+      | x == y = ys
+      | otherwise = y : delete' x ys
+
+elemS :: (Eq a) => a -> Set a -> Bool
+elemS x (Set xs) = x `elem` xs
+
+union :: (Eq a) => Set a -> Set a -> Set a
+union (Set []) (Set ys) = Set ys
+union (Set (x:xs)) (Set ys) = insert x (union (Set xs) (Set ys))
+
+intersect :: (Eq a) => Set a -> Set a -> Set a
+intersect (Set []) _ = Set []
+intersect (Set (x:xs)) s@(Set ys) = 
+    if elemS x s
+        then insert x (intersect (Set xs) s)
+        else intersect (Set xs) s
+
+equal :: (Eq a) => Set a -> Set a -> Bool
+equal (Set xs) (Set ys) = allIn xs ys && allIn ys xs
+    where
+        allIn [] _ = True
+        allIn (z:zs) list = z `elem` list && allIn zs list
+
+
