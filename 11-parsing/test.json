@@ -1,0 +1,13 @@
+{
+  "name": "Test",
+  "age": 25,
+  "active": true,
+  "score": null,
+  "tags": ["haskell", "parsing"],
+  "address": {
+    "city": "Sofia",
+    "country": "Bulgaria"
+  }
+}
+
+
