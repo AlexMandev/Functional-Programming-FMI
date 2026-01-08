@@ -1,4 +1,4 @@
--- Да се дефинира алгебричен тип данни, представящ естествените числа в Пеановата аритметика.
+-- 1. Да се дефинира алгебричен тип данни, представящ естествените числа в Пеановата аритметика.
 -- Да се дефинират следните функции:
 --     succ :: Nat -> Nat;
 --     pred :: Nat -> Nat;
@@ -158,8 +158,7 @@ eval dict (expr1 :*: expr2) = case (lhs, rhs) of
 -- flatten :: Tree a -> [a]
 -- flatten (Node a xs) = a : concatMap flatten xs
 
-
---5. Да се дефинира алгебричен тип данни, представящ двоично дърво с елементи от произволен тип. Да се дефинират следните функции:
+-- 5. Да се дефинира алгебричен тип данни, представящ двоично дърво с елементи от произволен тип. Да се дефинират следните функции:
 -- countLeaves :: BinTree a -> Int;
 -- height :: BinTree a -> Int;
 -- mapBT :: (a -> b) -> BinTree a -> BinTree b;
@@ -168,17 +167,15 @@ eval dict (expr1 :*: expr2) = case (lhs, rhs) of
 -- toBST :: Ord a => [a] -> BinTree a;
 -- isBalancedBST :: (Ord a, Bounded a) => BinTree a -> Bool.
 
-
 data BinTree a = Empty | Node a (BinTree a) (BinTree a)
   deriving (Show)
 
 tree :: BinTree Int
 tree = Node 1 (Node 2 (Node 3 Empty Empty) Empty) (Node 4 (Node 6 Empty Empty) (Node 5 Empty Empty))
 
-  --     1
-  --   2     4
-  -- 3     6   5
-
+--     1
+--   2     4
+-- 3     6   5
 
 countLeaves :: BinTree a -> Int
 countLeaves Empty = 0
@@ -186,7 +183,7 @@ countLeaves (Node x left right) = 1 + countLeaves left + countLeaves right
 
 height :: BinTree a -> Int
 height Empty = 0
-height (Node a left right) = 1 + max (height left) (height right) 
+height (Node a left right) = 1 + max (height left) (height right)
 
 mapBT :: (a -> b) -> BinTree a -> BinTree b
 mapBT _ Empty = Empty
@@ -199,9 +196,3 @@ inorder (Node x left right) = inorder left ++ x : inorder right
 preorder :: BinTree a -> [a]
 preorder Empty = []
 preorder (Node x left right) = x : preorder left ++ preorder right
-
-insertBST :: a -> BinTree a -> BinTree a
-insertBST x Empty = Node x Empty Empty
-insertBST x (Node x left right) = 
-
-toBST :: (Ord a) => [a] -> BinTree a
